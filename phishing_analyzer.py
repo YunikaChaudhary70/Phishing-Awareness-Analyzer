@@ -15,29 +15,29 @@ def analyze_email():
     risk_score = 0
 
     # 1. Fake Domain Check
-    fake_indicators = ["-secure", "-verify", "support-", "googie", "faceboook"]
+    fake_indicators = ["-secure", "-verify", "support-", "google", "facebook"]
     if any(d in sender for d in fake_indicators):
-        red_flags.append(["Fake-looking domain", "Possible impersonation"])
+        red_flags.append(("Fake-looking domain", "Possible impersonation"))
         risk_score += 3
 
     # 2. Urgent Language
     urgent_words = ["urgent", "suspended", "verify now", "24 hours", "blocked", "immediately"]
     if any(w in subject or w in body for w in urgent_words):
-        red_flags.append(["Urgent language", "Pressure to act fast"])
+        red_flags.append(("Urgent language", "Pressure to act fast"))
         risk_score += 3
 
     # 3. Credential Request
     cred_words = ["otp", "password", "kyc", "verify account", "aadhar", "pan"]
     if any(w in body for w in cred_words):
-        red_flags.append(["Request for OTP/Password", "Credential theft attempt"])
+        red_flags.append(("Request for OTP/Password", "Credential theft attempt"))
         risk_score += 4
 
     # 4. Suspicious Link
     if "bit.ly" in link or "tinyurl" in link:
-        red_flags.append(["URL Shortener", "Hides real destination"])
+        red_flags.append(("URL Shortener", "Hides real destination"))
         risk_score += 2
-    if "http" in link:
-        red_flags.append(["External link", "Verify before clicking"])
+    if "http" in link or ".in" in link or ".com" in link:
+        red_flags.append(("External link", "Verify before clicking"))
         risk_score += 1
 
     # Risk Level
